@@ -39,6 +39,7 @@ require_once WPAM_BASE_DIRECTORY . "/source/MoneyHelper.php";
 require_once WPAM_BASE_DIRECTORY . "/source/PayPal/Service.php";
 require_once WPAM_BASE_DIRECTORY . "/source/Util/JsonHandler.php";
 require_once WPAM_BASE_DIRECTORY . "/source/display_functions.php";
+require_once WPAM_BASE_DIRECTORY . "/source/Util/DebugLogger.php";
 
 
 class WPAM_Plugin
@@ -173,6 +174,10 @@ class WPAM_Plugin
 		add_action( 'woocommerce_checkout_order_processed', array( $this, 'onWooCheckout' ), 10, 2 );
 		add_filter( 'it_exchange_add_transaction', array( $this, 'onExchangeCheckout' ), 10, 7 );
 
+                //simple cart integration
+                add_filter('wpspc_cart_custom_field_value', array( $this, 'wpspcAddCustomValue'));
+                add_action('wpspc_paypal_ipn_processed', array($this, 'wpspcProcessTransaction'));
+
 		add_action( 'wp_ajax_wpam-ajax_request', array( $this, 'onAjaxRequest' ) );
 
 		add_filter('login_redirect',  array($this, 'redirectAffiliate'), 10, 3);
@@ -285,6 +290,35 @@ class WPAM_Plugin
 		echo '</p></div></div>';
 	}
 
+        public function wpspcAddCustomValue($custom_field_val){
+            if(isset($_COOKIE[WPAM_PluginConfig::$RefKey])){
+                $name = 'wpam_tracking';
+                $value = $_COOKIE[WPAM_PluginConfig::$RefKey];
+                $new_val = $name.'='.$value;
+                $custom_field_val = $custom_field_val.'&'.$new_val;
+                WPAM_Logger::log_debug('Simple WP Cart Integration - Adding custom field value. New value: '.$custom_field_val);
+            }
+            return $custom_field_val;
+        }
+        
+        public function wpspcProcessTransaction($ipn_data){
+            $custom_data = $ipn_data['custom'];
+            WPAM_Logger::log_debug('Simple WP Cart Integration - IPN processed hook fired. Custom field value: '.$custom_data);
+            $custom_values = array();
+            parse_str($custom_data, $custom_values);
+            if(isset($custom_values['wpam_tracking']) && !empty($custom_values['wpam_tracking'])){
+                $tracking_value = $custom_values['wpam_tracking'];
+                WPAM_Logger::log_debug('Simple WP Cart Integration - Tracking data present. Need to track affiliate commission. Tracking value: '.$tracking_value);
+                
+                $purchaseLogId = $ipn_data['txn_id'];
+                $purchaseAmount = $ipn_data['mc_gross'];//TODO - later calculate sub-total only
+                $strRefKey = $tracking_value;
+                $requestTracker = new WPAM_Tracking_RequestTracker();
+                $requestTracker->handleCheckoutWithRefKey( $purchaseLogId, $purchaseAmount, $strRefKey);
+                WPAM_Logger::log_debug('Simple WP Cart Integration - Commission tracked for transaction ID: '.$purchaseLogId.'. Purchase amt: '.$purchaseAmount);
+            }
+        }
+        
 	public function onWpscCheckout( array $purchaseInfo ) {
 		if ( $purchaseInfo['purchase_log']['processed'] >= 2 ) {
 			$purchaseAmount = $purchaseInfo['purchase_log']['totalprice'] - $purchaseInfo['purchase_log']['base_shipping'];

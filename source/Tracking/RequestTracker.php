@@ -87,6 +87,76 @@ class WPAM_Tracking_RequestTracker {
 		}
 	}
 	
+	public function handleCheckoutWithRefKey( $purchaseLogId, $purchaseAmount, $strRefKey) {
+		
+		$db = new WPAM_Data_DataAccess();
+		$binConverter = new WPAM_Util_BinConverter();
+		$affiliate = NULL;
+
+		// keeping this block and "($affiliate !== NULL)" seperate to
+		// help indicate any problems
+		// (purchase log recorded w/o a purchase event)
+		
+		if ( !empty($strRefKey )) {
+			
+			$trackingToken = $db->getTrackingTokenRepository()->loadBy( array(
+				'trackingKey' => $strRefKey,
+			) );
+
+			if ( $trackingToken !== NULL ) {
+				$ttpl = $db->getTrackingTokenPurchaseLogRepository()->loadBy( array(
+					'trackingTokenId' => $trackingToken->trackingTokenId,
+					'purchaseLogId' => $purchaseLogId
+				));
+
+				if ( $ttpl === NULL ) {
+					$trackingTokenPurchaseLog = new WPAM_Data_Models_TrackingTokenPurchaseLogModel();
+					$trackingTokenPurchaseLog->trackingTokenId = $trackingToken->trackingTokenId;
+					$trackingTokenPurchaseLog->purchaseLogId = $purchaseLogId;
+
+					$db->getTrackingTokenPurchaseLogRepository()->insert( $trackingTokenPurchaseLog );
+					//this will be handled further down if the affiliate is set and the purchase was successful
+					//$db->getEventRepository()->quickInsert(time(), $strRefKey, 'purchase');
+				}
+			}
+		}
+
+		$affiliate = $db->getAffiliateRepository()->loadByPurchaseLogId( $purchaseLogId );
+
+		if ( $affiliate !== NULL && $affiliate->isActive() ) {
+			
+			if ( $strRefKey )
+				$db->getEventRepository()->quickInsert( time(), $binConverter->stringToBin( $strRefKey ), 'purchase' );
+
+			$creditAmount = $this->calculateCreditAmount( $affiliate, $purchaseAmount );
+			$creditAmount = apply_filters( 'wpam_credit_amount', $creditAmount, $purchaseAmount, $purchaseLogId );
+			$currency = WPAM_MoneyHelper::getCurrencyCode();
+			$description = "Credit for sale of $purchaseAmount $currency (PURCHASE LOG ID = $purchaseLogId)";
+			$existingCredit = $db->getTransactionRepository()->loadBy( array(
+					'referenceId' => $purchaseLogId
+				)
+			);
+
+			if ( $existingCredit === NULL ) {
+				$credit = new WPAM_Data_Models_TransactionModel();
+				$credit->dateCreated = time();
+				$credit->referenceId = $purchaseLogId;
+				$credit->affiliateId = $affiliate->affiliateId;
+				$credit->type = 'credit';
+				$credit->description = $description;
+				$credit->amount = $creditAmount;
+
+				$db->getTransactionRepository()->insert( $credit );
+
+			} else {
+				$existingCredit->dateModified = time();
+				$existingCredit->description = $description;
+				$existingCredit->amount = $creditAmount;
+				$db->getTransactionRepository()->update( $existingCredit );
+			}
+		}
+	}
+        
 	protected function calculateCreditAmount(WPAM_Data_Models_AffiliateModel $affiliate, $amount)
 	{
 		if ($affiliate->bountyType === 'percent')

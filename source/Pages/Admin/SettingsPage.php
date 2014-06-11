@@ -12,6 +12,11 @@ class WPAM_Pages_Admin_SettingsPage extends WPAM_Pages_Admin_AdminPage
 	
 	public function processRequest($request)
 	{
+                if(isset($request['wpam_reset_logfile'])){
+                    WPAM_Logger::reset_log_file();
+                    echo '<div class="updated fade"><p>Log file has been reset</p></div>';
+                }
+
 		if (isset($request['action']) && $request['action'] === 'submitSettings')
 		{
 			return $this->doFormSubmit($request);
@@ -61,7 +66,12 @@ class WPAM_Pages_Admin_SettingsPage extends WPAM_Pages_Admin_AdminPage
 			else{
 				update_option(WPAM_PluginConfig::$AutoAffiliateApproveIsEnabledOption, 0);
                         }        
- 
+                        if (isset($request['enable_debug'])){
+				update_option(WPAM_PluginConfig::$AffEnableDebug, 1);
+                        }
+			else{
+				update_option(WPAM_PluginConfig::$AffEnableDebug, 0);
+                        }
 			if (isset($request['chkPayoutMethodPaypal']))
 				update_option(WPAM_PluginConfig::$PayoutMethodPaypalIsEnabledOption, 1);
 			else
@@ -184,6 +194,7 @@ class WPAM_Pages_Admin_SettingsPage extends WPAM_Pages_Admin_AdminPage
                         $response->viewData['request']['autoaffapprove'] = get_option(WPAM_PluginConfig::$AutoAffiliateApproveIsEnabledOption);
                         $response->viewData['request']['affBountyType'] = get_option(WPAM_PluginConfig::$AffBountyType);
                         $response->viewData['request']['affBountyAmount'] = get_option(WPAM_PluginConfig::$AffBountyAmount);
+                        $response->viewData['request']['enable_debug'] = get_option(WPAM_PluginConfig::$AffEnableDebug);
 			$response->viewData['request']['chkPayoutMethodCheck'] = get_option(WPAM_PluginConfig::$PayoutMethodCheckIsEnabledOption);
 			$response->viewData['request']['chkPayoutMethodPaypal'] = get_option(WPAM_PluginConfig::$PayoutMethodPaypalIsEnabledOption);
 			$response->viewData['request']['chkEnablePaypalMassPay'] = get_option(WPAM_PluginConfig::$PaypalMassPayEnabledOption);

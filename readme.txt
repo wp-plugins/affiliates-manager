@@ -4,7 +4,7 @@ Donate link: http://wpaffiliatemanager.com/
 Tags: affiliate, affiliate marketing, affiliate plugin, affiliates, referral, affiliate program, ads, advertising, affiliate tool, digital downloads, e-commerce, tracking, leads, affiliate software
 Requires at least: 3.5
 Tested up to: 3.9.1
-Stable tag: 1.6.8
+Stable tag: 1.6.9
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -76,6 +76,11 @@ View screenshots in the following page:
 http://wpaffiliatemanager.com/screen-shots/
 
 == Changelog ==
+
+= 1.6.9 =
+- Fixed a minor bug with WooCommerce commission tracking
+- Added debug logging option
+- Simple shopping cart tracking option added.
 
 = 1.6.8 =
 - First commit to wp repository

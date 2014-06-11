@@ -161,4 +161,19 @@ These addresses will only affect emails going to affiliates regarding their appr
                         <input type="text" id="affBountyAmount" name="affBountyAmount" size="5" value="<?php echo $this->viewData['request']['affBountyAmount']?>" />
                 </td>
         </tr>
+        
+        <tr valign="top">
+        <th scope="row"><label for="enable_debug"><?php echo __('Enable Debug','wpam'); ?></label></th>
+        <td>
+        <input name="enable_debug" type="checkbox"<?php if($this->viewData['request']['enable_debug']!='') echo ' checked="checked"'; ?> value="1"/>
+        <p class="description">If checked, debug output will be written to log files. This is useful for troubleshooting post payment failures.</p>
+        <p class="description">You can check the debug log file by clicking on the link below (The log file can be viewed using any text editor):</p>
+        
+        <p><a href="<?php echo WPAM_URL.'/logs/wpam-log.txt'; ?>" target="_blank">wpam-log.txt</a></p>    
+        <div class="submit">
+            <input type="submit" name="wpam_reset_logfile" class="button" style="color:red" value="Reset Debug Log file"/> 
+            <p class="descripiton">Use it to reset the affiliate manager plugin's log file.</p>
+        </div>
+        </td></tr>
+        
 </table>
