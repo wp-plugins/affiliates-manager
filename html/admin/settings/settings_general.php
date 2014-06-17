@@ -162,6 +162,15 @@ These addresses will only affect emails going to affiliates regarding their appr
                 </td>
         </tr>
         
+        <tr>
+                <th>
+                        <label id="lblaffCurSymbol" for="affCurrencySymbol"><?php _e( 'Currency Symbol', 'wpam' ) ?></label>
+                </th>
+                <td>
+                        <input type="text" id="affCurrencySymbol" name="affCurrencySymbol" size="5" value="<?php echo $this->viewData['request']['affCurrencySymbol']?>" />
+                </td>
+        </tr>
+        
         <tr valign="top">
         <th scope="row"><label for="enable_debug"><?php echo __('Enable Debug','wpam'); ?></label></th>
         <td>

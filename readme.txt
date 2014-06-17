@@ -4,7 +4,7 @@ Donate link: http://wpaffiliatemanager.com/
 Tags: affiliate, affiliate marketing, affiliate plugin, affiliates, referral, affiliate program, ads, advertising, affiliate tool, digital downloads, e-commerce, tracking, leads, affiliate software
 Requires at least: 3.5
 Tested up to: 3.9.1
-Stable tag: 1.6.9
+Stable tag: 1.7.0
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -20,7 +20,15 @@ This plugin facilitates the affiliates recruitment, registration, login, managem
 
 It will also track the referrals your affiliates send to your site and give commissions appropriately.
 
-Affiliate Manager integrates with some popular e-commerce solutions. It integrates with WooCommerce, Simple Shopping Cart, WP eCommerce, Easy Digital Downloads, iThemes Exchange, and WP eStore.
+Affiliates Manager integrates with some popular e-commerce solutions. It integrates with:
+
+* WooCommerce
+* Simple Shopping Cart
+* WP eCommerce
+* JigoShop
+* Easy Digital Downloads
+* iThemes Exchange
+* WP eStore
 
 = Real-Time Reporting =
 
@@ -76,6 +84,12 @@ View screenshots in the following page:
 http://wpaffiliatemanager.com/screen-shots/
 
 == Changelog ==
+
+= 1.7.0 =
+- Added a new option to set currency symbol in the settings.
+- Changed the creative status to be active by default when they are created.
+- Added a new action hook that is triggered after affiliates submit the registration form.
+- Added integration with jigoshop e-commerce plugin.
 
 = 1.6.9 =
 - Fixed a minor bug with WooCommerce commission tracking

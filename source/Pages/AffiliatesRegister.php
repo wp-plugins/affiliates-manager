@@ -35,6 +35,9 @@ class WPAM_Pages_AffiliatesRegister extends WPAM_Pages_PublicPage
 				
 				$affiliateHelper->setModelFromForm( $model, $affiliateFields, $request );
                                 
+                                //Fire the action hook
+                                do_action('wpam_front_end_registration_form_submitted', $model, $request);
+                                
                                 //Check if automatic affiliate approval option is enabled
                                 if(get_option(WPAM_PluginConfig::$AutoAffiliateApproveIsEnabledOption) == 1){
                                     $userHandler = new WPAM_Util_UserHandler();

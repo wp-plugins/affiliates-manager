@@ -203,7 +203,7 @@ class WPAM_Pages_Admin_MyCreativesPage extends WPAM_Pages_Admin_AdminPage
 				$model = new WPAM_Data_Models_CreativeModel();
 				$model->dateCreated = time();
 				//#50 new creatives start as 'inactive'
-				$model->status = 'inactive';
+				$model->status = 'active';
 			}
 			
 			$model->type = $request['ddType'];

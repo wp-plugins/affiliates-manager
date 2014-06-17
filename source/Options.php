@@ -38,6 +38,7 @@ class WPAM_Options
                 add_option( WPAM_PluginConfig::$AutoAffiliateApproveIsEnabledOption,  true, NULL, 'no' );
                 add_option( WPAM_PluginConfig::$AffBountyType, 'percent' );
                 add_option( WPAM_PluginConfig::$AffBountyAmount, 25 );
+                add_option( WPAM_PluginConfig::$AffCurrencySymbol, '$' );
 		add_option( WPAM_PluginConfig::$PayoutMethodCheckIsEnabledOption,  true, NULL, 'no' );
 		add_option( WPAM_PluginConfig::$PayoutMethodPaypalIsEnabledOption, true, NULL, 'no' );
 

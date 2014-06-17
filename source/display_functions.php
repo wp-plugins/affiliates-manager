@@ -101,13 +101,9 @@ function money_format($format, $number)
                 $suffix = ')';
                 break;
         }
-        if (!$flags['nosimbol']) {
-            /*$currency = $cprefix .
-                        ($conversion == 'i' ? $locale['int_curr_symbol'] : $locale['currency_symbol']) .
-                        $csuffix;*/
-            $currency = '$';//TODO - add a settings option for the currency symbol.
-        } else {
-            $currency = '';
+        $currency = get_option(WPAM_PluginConfig::$AffCurrencySymbol);
+        if(empty($currency)){
+            $currency = '$';
         }
         $space  = $locale["{$letter}_sep_by_space"] ? ' ' : '';
 

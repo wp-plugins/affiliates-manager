@@ -18,6 +18,7 @@ class WPAM_PluginConfig
         public static $AutoAffiliateApproveIsEnabledOption = 'wpam_auto_aff_approve_enabled';
         public static $AffBountyType = 'wpam_affbounty_type';
         public static $AffBountyAmount = 'wpam_affbounty_amount';
+        public static $AffCurrencySymbol = 'wpam_affcurrency_symbol';
         public static $AffEnableDebug = 'wpam_enable_debug';
 	public static $PayoutMethodCheckIsEnabledOption = 'wpam_payout_check_enabled';
 	public static $PayoutMethodPaypalIsEnabledOption = 'wpam_payout_paypal_enabled';

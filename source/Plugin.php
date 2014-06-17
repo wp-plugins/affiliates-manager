@@ -172,12 +172,17 @@ class WPAM_Plugin
 		//checkout handlers
 		add_action( 'wpsc_transaction_result_cart_item', array( $this, 'onWpscCheckout' ) );
 		add_action( 'woocommerce_checkout_order_processed', array( $this, 'onWooCheckout' ), 10, 2 );
+                
+                //Exchange integration
 		add_filter( 'it_exchange_add_transaction', array( $this, 'onExchangeCheckout' ), 10, 7 );
 
                 //simple cart integration
                 add_filter('wpspc_cart_custom_field_value', array( $this, 'wpspcAddCustomValue'));
                 add_action('wpspc_paypal_ipn_processed', array($this, 'wpspcProcessTransaction'));
 
+                //Jigoshop integration
+                add_action ('jigoshop_new_order', array($this, 'jigoshopNewOrder'));
+                
 		add_action( 'wp_ajax_wpam-ajax_request', array( $this, 'onAjaxRequest' ) );
 
 		add_filter('login_redirect',  array($this, 'redirectAffiliate'), 10, 3);
@@ -336,6 +341,25 @@ class WPAM_Plugin
 		$requestTracker->handleCheckout( $order_id, $purchaseAmount );
 	}
 
+        public function jigoshopNewOrder($order_id)
+        {
+            $order = new jigoshop_order( $order_id );
+
+            $total = floatval( $order->order_subtotal );
+            if ( $order->order_discount ) {
+                $total = $total - floatval( $order->order_discount );
+            }
+            if ( $total < 0 ) {
+                $total = 0;
+            }
+            
+            WPAM_Logger::log_debug('JigoShop Integration - new order received. Order ID: '.order_id.'. Purchase amt: '.$total);
+
+            $requestTracker = new WPAM_Tracking_RequestTracker();
+            $requestTracker->handleCheckout( $order_id, $total );
+            
+        }
+        
 	public function onEDDCheckout( $payment_id, $new_status, $old_status ) {
 		if ( $old_status == 'publish' || $old_status == 'complete' )
 			return; // Make sure that payments are only completed once
