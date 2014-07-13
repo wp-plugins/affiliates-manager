@@ -4,7 +4,7 @@ Donate link: http://wpaffiliatemanager.com/
 Tags: affiliate, affiliate marketing, affiliate plugin, affiliates, referral, affiliate program, ads, advertising, affiliate tool, digital downloads, e-commerce, tracking, leads, affiliate software
 Requires at least: 3.5
 Tested up to: 3.9.1
-Stable tag: 1.7.0
+Stable tag: 1.7.1
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -84,6 +84,11 @@ View screenshots in the following page:
 http://wpaffiliatemanager.com/screen-shots/
 
 == Changelog ==
+
+= 1.7.1 =
+- Made enhancements to the "add affiliate" button in the admin area.
+- Made some enhancements to the money formatting function.
+- Converted the settings menu tab links to WordPress style tabs.
 
 = 1.7.0 =
 - Added a new option to set currency symbol in the settings.

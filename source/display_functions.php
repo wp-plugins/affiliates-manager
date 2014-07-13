@@ -48,10 +48,19 @@ function wpam_html_country_code_options( $fieldValue ) {
 	}
 }
 
-if ( ! function_exists( 'money_format' ) ):
+if ( ! function_exists( 'wpam_money_format' ) ):
 // from http://php.net/manual/en/function.money-format.php#89060
-function money_format($format, $number)
-{
+function wpam_money_format($format, $number)
+{    
+    $currency = get_option(WPAM_PluginConfig::$AffCurrencySymbol);
+    if(empty($currency)){
+       $currency = '$';
+    }
+    $formatted_amount = number_format($number, 2, '.', ',');
+    $formatted_output = $currency . $formatted_amount;
+    return $formatted_output;
+
+    //--------- TODO - refactor the following later -------------
     $regex  = '/%((?:[\^!\-]|\+|\(|\=.)*)([0-9]+)?'.
               '(?:#([0-9]+))?(?:\.([0-9]+))?([in%])/';
     $locale = localeconv();
@@ -135,13 +144,13 @@ endif;
 function wpam_format_money( $money, $add_span = true ) {
 	if ( $add_span ) {
 		if ( $money > 0 )
-			return '<span class="positiveMoney">' . money_format( '%n', $money ) . "</span>";
+			return '<span class="positiveMoney">' . wpam_money_format( '%n', $money ) . "</span>";
 		else if ( $money < 0 )
-			return '<span class="negativeMoney">' . money_format( '%n', $money ) . "</span>";
+			return '<span class="negativeMoney">' . wpam_money_format( '%n', $money ) . "</span>";
 		else
-			return '<span>' . money_format( '%n', $money ) . "</span>";
+			return '<span>' . wpam_money_format( '%n', $money ) . "</span>";
 	} else {
-		return money_format( '%n', $money );
+		return wpam_money_format( '%n', $money );
 	}		
 }
 

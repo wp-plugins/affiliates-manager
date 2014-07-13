@@ -174,7 +174,7 @@ These addresses will only affect emails going to affiliates regarding their appr
         <tr valign="top">
         <th scope="row"><label for="enable_debug"><?php echo __('Enable Debug','wpam'); ?></label></th>
         <td>
-        <input name="enable_debug" type="checkbox"<?php if($this->viewData['request']['enable_debug']!='') echo ' checked="checked"'; ?> value="1"/>
+        <input name="enable_debug" type="checkbox"<?php if($this->viewData['request']['enable_debug']=='1') echo ' checked="checked"'; ?> value="1"/>
         <p class="description">If checked, debug output will be written to log files. This is useful for troubleshooting post payment failures.</p>
         <p class="description">You can check the debug log file by clicking on the link below (The log file can be viewed using any text editor):</p>
         

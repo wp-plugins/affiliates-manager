@@ -147,8 +147,8 @@ endif;
 		<?php if( is_admin() ): ?>
 			<p><?php _e( '+ Custom fields', 'wpam' ) ?></p>
 		<?php endif; ?>
-		<div class="buttonsBar">
-			<a id="saveInfoButton" class="button-secondary"><?php echo isset( $this->viewData['saveLabel'] ) ? $this->viewData['saveLabel'] : __( 'Save Changes', 'wpam' ); ?></a>
+		<div class="buttonsBar">			
 			<input type="hidden" name="action" value="saveInfo"/>
+                        <input type="submit" id="saveInfoButton" class="button-primary" name="wpam-add-affiliate" value="<?php echo isset( $this->viewData['saveLabel'] ) ? $this->viewData['saveLabel'] : __( 'Save Changes', 'wpam' ); ?>" />
 		</div>
 	    </form>

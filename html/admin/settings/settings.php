@@ -7,13 +7,13 @@
 <script type="text/javascript">
 
 	jQuery(function($) {
-		
+		/*
 		$("#tabs").tabs({
 			cookie: {
 				  name: 'wpam_settings_tab'
 			}
 		});
-
+                */
 	});
 </script>
 
@@ -30,9 +30,7 @@
 require_once WPAM_BASE_DIRECTORY . "/html/widget_form_errors_panel.php";
 ?>
 
-	<form method="post" action="admin.php?page=wpam-settings">
-		<input type="hidden" name="action" value="submitSettings" />
-
+                <!--
 		<div id="tabs">
 			<ul>
 				<li><a href="#tabs-general">General</a></li>
@@ -40,22 +38,72 @@ require_once WPAM_BASE_DIRECTORY . "/html/widget_form_errors_panel.php";
 				<li><a href="#tabs-messaging">Messaging</a></li>
 				<li><a href="#tabs-payment">Payment</a></li>
 			</ul>
-			<div id="tabs-general">
-				<?php require_once "settings_general.php" ?>
-			</div>
-
-			<div id="tabs-affiliate-registration">
-				<?php require_once "settings_registration.php" ?>
-			</div>
-			<div id="tabs-messaging">
-				<?php require_once "settings_messaging.php" ?>
-			</div>
-
-			<div id="tabs-payment">
-				<?php require_once "settings_payment.php" ?>
-			</div>
+			
 		</div>
+                -->
+                <?php
+                $wpam_plugin_tabs = array(
+                    'wpam-settings' => 'General',
+                    'wpam-settings&action=affiliate-registration' => 'Affiliate Registration',
+                    'wpam-settings&action=messaging' => 'Messaging',
+                    'wpam-settings&action=payment' => 'Payment'
+                ); 
 
+                if(isset($_GET['page'])){
+                    $current = $_GET['page'];
+                    if(isset($_GET['action'])){
+                        $current .= "&action=".$_GET['action'];
+                    }
+                }
+                $content = '';
+                $content .= '<h2 class="nav-tab-wrapper">';
+                foreach($wpam_plugin_tabs as $location => $tabname)
+                {
+                    if($current == $location){
+                        $class = ' nav-tab-active';
+                    } else{
+                        $class = '';    
+                    }
+                    $content .= '<a class="nav-tab'.$class.'" href="?page='.$location.'">'.$tabname.'</a>';
+                }
+                $content .= '</h2>';
+                echo $content;
+                ?>
+                <form method="post" action="<?php echo $_SERVER["REQUEST_URI"]; ?>">
+		<input type="hidden" name="action" value="submitSettings" />
+                <?php
+                if(isset($_GET['action']))
+                { 
+                     switch ($_GET['action'])
+                     {
+                          case 'affiliate-registration':
+                              ?>
+                              <input type="hidden" name="AffRegSettings" value="1" />
+                              <?php
+                              require_once "settings_registration.php";
+                              break;
+                          case 'messaging':
+                              ?>
+                              <input type="hidden" name="AffMsgSettings" value="1" />
+                              <?php
+                              require_once "settings_messaging.php";
+                              break;
+                          case 'payment':
+                              ?>
+                              <input type="hidden" name="AffPaymentSettings" value="1" />
+                              <?php
+                              require_once "settings_payment.php";
+                              break;
+                     }
+                }
+                else
+                {
+                    ?>
+                    <input type="hidden" name="AffGeneralSettings" value="1" />
+                    <?php
+                    require_once "settings_general.php";
+                }
+                ?>
 		<div style="margin: 10px;">
 			<input class="button-primary" type="submit" name="btnSubmit" id="btnSubmit" value="Save Settings" />
 		</div>

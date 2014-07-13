@@ -30,10 +30,12 @@ class WPAM_Pages_Admin_SettingsPage extends WPAM_Pages_Admin_AdminPage
 	protected function doFormSubmit($request)
 	{
 		$validator = new WPAM_Validation_Validator();
-		$validator->addValidator('txtMinimumPayout', new WPAM_Validation_MoneyValidator());
-		$validator->addValidator('txtTnc', new WPAM_Validation_StringValidator(1));
-		$validator->addValidator('txtCookieExpire',new WPAM_Validation_NumberValidator());
-
+                if(isset($request['AffGeneralSettings']))
+                {
+                    $validator->addValidator('txtMinimumPayout', new WPAM_Validation_MoneyValidator());
+                    $validator->addValidator('txtTnc', new WPAM_Validation_StringValidator(1));
+                    $validator->addValidator('txtCookieExpire',new WPAM_Validation_NumberValidator());
+                }
 		//#61 allow these to be unset/null
 		if ( ! empty( $request['txtEmailName'] ) )
 			$validator->addValidator('txtEmailName',new WPAM_Validation_StringValidator(1));
@@ -52,102 +54,116 @@ class WPAM_Pages_Admin_SettingsPage extends WPAM_Pages_Admin_AdminPage
 		if ($vr->getIsValid())
 		{
 			$db = new WPAM_Data_DataAccess();
-
-			update_option(WPAM_PluginConfig::$MinPayoutAmountOption, $request['txtMinimumPayout']);
-			update_option(WPAM_PluginConfig::$TNCOptionOption, $request['txtTnc']);
-			update_option(WPAM_PluginConfig::$CookieExpireOption, $request['txtCookieExpire']);
-			update_option(WPAM_PluginConfig::$EmailNameOption, $request['txtEmailName']);
-			update_option(WPAM_PluginConfig::$EmailAddressOption, $request['txtEmailAddress']);
-			update_option(WPAM_PluginConfig::$AffBountyType, $request['affBountyType']);
-                        update_option(WPAM_PluginConfig::$AffBountyAmount, $request['affBountyAmount']);
-                        update_option(WPAM_PluginConfig::$AffCurrencySymbol, $request['affCurrencySymbol']);
-                        if (isset($request['autoaffapprove'])){
-				update_option(WPAM_PluginConfig::$AutoAffiliateApproveIsEnabledOption, 1);
+                        if(isset($request['AffGeneralSettings']))  //General settings options submitted
+                        {
+                            update_option(WPAM_PluginConfig::$MinPayoutAmountOption, $request['txtMinimumPayout']);
+                            update_option(WPAM_PluginConfig::$TNCOptionOption, $request['txtTnc']);
+                            update_option(WPAM_PluginConfig::$CookieExpireOption, $request['txtCookieExpire']);
+                            update_option(WPAM_PluginConfig::$EmailNameOption, $request['txtEmailName']);
+                            update_option(WPAM_PluginConfig::$EmailAddressOption, $request['txtEmailAddress']);
+                            update_option(WPAM_PluginConfig::$AffBountyType, $request['affBountyType']);
+                            update_option(WPAM_PluginConfig::$AffBountyAmount, $request['affBountyAmount']);
+                            update_option(WPAM_PluginConfig::$AffCurrencySymbol, $request['affCurrencySymbol']);
+                            if (isset($request['autoaffapprove'])){
+                                    update_option(WPAM_PluginConfig::$AutoAffiliateApproveIsEnabledOption, 1);
+                            }
+                            else{
+                                    update_option(WPAM_PluginConfig::$AutoAffiliateApproveIsEnabledOption, 0);
+                            }        
+                            if (isset($request['enable_debug'])){
+                                    update_option(WPAM_PluginConfig::$AffEnableDebug, 1);
+                            }
+                            else{
+                                    update_option(WPAM_PluginConfig::$AffEnableDebug, 0);
+                            }
                         }
-			else{
-				update_option(WPAM_PluginConfig::$AutoAffiliateApproveIsEnabledOption, 0);
-                        }        
-                        if (isset($request['enable_debug'])){
-				update_option(WPAM_PluginConfig::$AffEnableDebug, 1);
+
+                        if (isset($request['AffPaymentSettings']))   //Payment settings options submitted
+                        {
+                            if (isset($request['chkEnablePaypalMassPay']))
+                            {
+                                    update_option(WPAM_PluginConfig::$PaypalMassPayEnabledOption, 1);
+                                    update_option(WPAM_PluginConfig::$PaypalAPIUserOption, $request['txtPaypalAPIUser']);
+                                    update_option(WPAM_PluginConfig::$PaypalAPIPasswordOption, $request['txtPaypalAPIPassword']);
+                                    update_option(WPAM_PluginConfig::$PaypalAPISignatureOption, $request['txtPaypalAPISignature']);
+                                    update_option(WPAM_PluginConfig::$PaypalAPIEndPointOption, $request['ddPaypalAPIEndPoint']);
+                            }
+                            else
+                            {
+                                    update_option(WPAM_PluginConfig::$PaypalMassPayEnabledOption, 0);
+                            }
                         }
-			else{
-				update_option(WPAM_PluginConfig::$AffEnableDebug, 0);
+
+                        if(isset($request['AffMsgSettings']))      //Messaging settings options submitted
+                        {
+                            foreach ($request['messages'] as $message)
+                            {
+                                    $messageModel = $db->getMessageRepository()->loadBy(array('name' => $message['name']));
+                                    if ($messageModel != NULL)
+                                    {
+                                            $messageModel->content = $message['content'];
+                                            $db->getMessageRepository()->update($messageModel);
+                                    }
+                            }
                         }
-			if (isset($request['chkPayoutMethodPaypal']))
-				update_option(WPAM_PluginConfig::$PayoutMethodPaypalIsEnabledOption, 1);
-			else
-				update_option(WPAM_PluginConfig::$PayoutMethodPaypalIsEnabledOption, 0);
+                        
+                        if(isset($request['AffRegSettings']))    //Registration settings options submitted
+                        {
+                            if (isset($request['chkPayoutMethodPaypal'])){
+                                    update_option(WPAM_PluginConfig::$PayoutMethodPaypalIsEnabledOption, 1);
+                            }
+                            else{
+                                    update_option(WPAM_PluginConfig::$PayoutMethodPaypalIsEnabledOption, 0);
+                            }        
+                            if (isset($request['chkPayoutMethodCheck']))
+                            {
+                                    update_option(WPAM_PluginConfig::$PayoutMethodCheckIsEnabledOption, 1);
+                            }
+                            else
+                            {
+                                    update_option(WPAM_PluginConfig::$PayoutMethodCheckIsEnabledOption, 0);
+                            }
+                            $affiliateFieldRepository = $db->getAffiliateFieldRepository();
+                            $affiliateFieldRepository->delete(array('type' => 'custom'));
 
-			if (isset($request['chkPayoutMethodCheck']))
-				update_option(WPAM_PluginConfig::$PayoutMethodCheckIsEnabledOption, 1);
-			else
-				update_option(WPAM_PluginConfig::$PayoutMethodCheckIsEnabledOption, 0);
+                            $order = 0;
+                            foreach ($request['field'] as $fieldName => $params)
+                            {
+                                    if ($params['type'] === 'custom')
+                                    {
 
-			if (isset($request['chkEnablePaypalMassPay']))
-			{
-				update_option(WPAM_PluginConfig::$PaypalMassPayEnabledOption, 1);
-				update_option(WPAM_PluginConfig::$PaypalAPIUserOption, $request['txtPaypalAPIUser']);
-				update_option(WPAM_PluginConfig::$PaypalAPIPasswordOption, $request['txtPaypalAPIPassword']);
-				update_option(WPAM_PluginConfig::$PaypalAPISignatureOption, $request['txtPaypalAPISignature']);
-				update_option(WPAM_PluginConfig::$PaypalAPIEndPointOption, $request['ddPaypalAPIEndPoint']);
-			}
-			else
-			{
-				update_option(WPAM_PluginConfig::$PaypalMassPayEnabledOption, 0);
-			}
+                                            $field = new WPAM_Data_Models_AffiliateFieldModel();
+                                            $field->type = 'custom';
+                                            $field->databaseField = $fieldName;
+                                            $field->fieldType = $params['fieldType'];
+                                            $field->length = $params['maxLength'];
+                                            $field->name = $params['displayName'];
+                                    }
+                                    else
+                                    {
+                                            $field = $affiliateFieldRepository->loadby(array('databaseField' => $fieldName));
+                                    }
 
+                                    $field->order = $order++;
+                                    //#43 email is required (but not submitted b/c it's disabled on the form)
+                                    if( $fieldName == 'email' ) {
+                                            $field->enabled = 1;
+                                            $field->required = 1;
+                                    } else {
+                                            $field->enabled = isset($params['enabled']) ? 1 : 0;
+                                            $field->required = isset($params['required']) ? 1 : 0;
+                                    }
 
-			$affiliateFieldRepository = $db->getAffiliateFieldRepository();
-			$affiliateFieldRepository->delete(array('type' => 'custom'));
-
-			$order = 0;
-
-			foreach ($request['messages'] as $message)
-			{
-				$messageModel = $db->getMessageRepository()->loadBy(array('name' => $message['name']));
-				if ($messageModel != NULL)
-				{
-					$messageModel->content = $message['content'];
-					$db->getMessageRepository()->update($messageModel);
-				}
-			}
-
-			foreach ($request['field'] as $fieldName => $params)
-			{
-				if ($params['type'] === 'custom')
-				{
-
-					$field = new WPAM_Data_Models_AffiliateFieldModel();
-					$field->type = 'custom';
-					$field->databaseField = $fieldName;
-					$field->fieldType = $params['fieldType'];
-					$field->length = $params['maxLength'];
-					$field->name = $params['displayName'];
-				}
-				else
-				{
-					$field = $affiliateFieldRepository->loadby(array('databaseField' => $fieldName));
-				}
-
-				$field->order = $order++;
-				//#43 email is required (but not submitted b/c it's disabled on the form)
-				if( $fieldName == 'email' ) {
-					$field->enabled = 1;
-					$field->required = 1;
-				} else {
-					$field->enabled = isset($params['enabled']) ? 1 : 0;
-					$field->required = isset($params['required']) ? 1 : 0;
-				}
-				
-				if ($params['type'] === 'custom')
-				{
-					$affiliateFieldRepository->insert($field);
-				}
-				else
-				{
-					$affiliateFieldRepository->update($field);
-				}
-			}
+                                    if ($params['type'] === 'custom')
+                                    {
+                                            $affiliateFieldRepository->insert($field);
+                                    }
+                                    else
+                                    {
+                                            $affiliateFieldRepository->update($field);
+                                    }
+                            }
+                        }
 			
 			return $this->getSettingsForm(NULL, "Settings updated.");
 		}
