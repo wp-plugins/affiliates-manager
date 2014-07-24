@@ -46,7 +46,8 @@ class WPAM_Util_UserHandler {
 			if ( is_wp_error( $userId ) )
 				throw new Exception( $userId->get_error_message() );
 
-			$mailer->mailNewAffiliate( $userId, $userPass );
+			//$mailer->mailNewAffiliate( $userId, $userPass );
+                        $mailer->mailNewApproveAffiliate($userId, $userPass);
 			$sendEmail = false;
 				
 			$user = new WP_User( $userId );
@@ -108,7 +109,8 @@ class WPAM_Util_UserHandler {
 			if ( is_wp_error( $userId ) )
 				throw new Exception( $userId->get_error_message() );
 
-			$mailer->mailNewAffiliate( $userId, $userPass );
+			//$mailer->mailNewAffiliate( $userId, $userPass );
+                        $mailer->mailNewApproveAffiliate($userId, $userPass);
 			$sendEmail = false;
 				
 			$user = new WP_User( $userId );

@@ -24,6 +24,26 @@ class WPAM_Util_EmailHandler {
 		remove_filter( 'wp_mail_from', array( $this, 'filterMailAddress' ) );
 		remove_filter( 'wp_mail_from_name', array( $this, 'filterMailName' ) );
 	}
+        
+        public function mailNewApproveAffiliate($user_id, $user_pass)
+        {
+            add_filter( 'wp_mail_from', array( $this, 'filterMailAddress' ) );
+            add_filter( 'wp_mail_from_name', array( $this, 'filterMailName' ) );
+            $user = get_user_by( 'id', $user_id );
+            $username = $user->user_login;
+            $address = $user->user_email;
+            $blogname = wp_specialchars_decode( get_option( 'blogname' ), ENT_QUOTES );
+            $login_url = wp_login_url();
+            $subject = "Affiliate Application for ".$blogname;
+            //$message = "New affiliate registration for {blogname}: has been approved!. \n\nUsername: {affusername} \nPassword: {affpassword} \nLogin URL: {affloginurl}";
+            $message = WPAM_MessageHelper::GetMessage('affiliate_application_approved_email');
+            $tags = array("{blogname}","{affusername}","{affpassword}","{affloginurl}");
+            $vals = array($blogname, $username, $user_pass, $login_url);
+            $body = str_replace($tags,$vals,$message);
+            wp_mail( $address, $subject, $body );
+            remove_filter( 'wp_mail_from', array( $this, 'filterMailAddress' ) );
+            remove_filter( 'wp_mail_from_name', array( $this, 'filterMailName' ) );
+        }
 	
 	public function filterMail( $args ) {
 		//only add to the user/password email
@@ -50,6 +70,5 @@ class WPAM_Util_EmailHandler {
 			return $nameOverride;
 		
 		return $name;
-	}	
-
+        }
 }

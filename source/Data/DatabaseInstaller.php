@@ -236,6 +236,22 @@ class WPAM_Data_DatabaseInstaller {
             $msg->use = 'Displayed to a newly registered affiliate if automatic affiliate approval option is enabled.';
             $msgRepo->insert($msg);
         }
+        
+        //Add the default message insert code below (it will only add it if it doesn't exist already) 
+        $db = new WPAM_Data_DataAccess();
+        $msgRepo = $db->getMessageRepository();
+        $message = $msgRepo->loadBy(array('name' => 'affiliate_application_approved_email'));
+        if($message === NULL){
+            $msg = new WPAM_Data_Models_MessageModel();
+            $msg->content = "Your affiliate account for {blogname} has been approved!. \n\nUsername: {affusername} \nPassword: {affpassword} \nLogin URL: {affloginurl} \n\nPlease log into your account to get referral code.";
+            $msg->name = 'affiliate_application_approved_email';
+            $msg->type = 'email';
+            $msg->use = 'Body of e-mail sent to a newly registered affiliate immediately following their application being approved.';
+            $msgRepo->insert($msg);
+        }
+        //Adde other options below
+        
+        
     }
 
     public function doInstallPages(array $new_pages) {

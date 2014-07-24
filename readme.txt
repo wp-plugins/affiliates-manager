@@ -1,10 +1,10 @@
 === Affiliates Manager ===
 Contributors: wp.insider, wpaffiliatemgr
 Donate link: http://wpaffiliatemanager.com/
-Tags: affiliate, affiliate marketing, affiliate plugin, affiliates, referral, affiliate program, ads, advertising, affiliate tool, digital downloads, e-commerce, tracking, leads, affiliate software
+Tags: affiliate, affiliate marketing, affiliate plugin, affiliates, referral, affiliate program, ads, advertising, affiliate tool, digital downloads, e-commerce, tracking, leads, affiliate software, woocommerce
 Requires at least: 3.5
 Tested up to: 3.9.1
-Stable tag: 1.7.1
+Stable tag: 1.7.2
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -57,6 +57,18 @@ You can add as many banners or text link ads as you wish. Plus, you can easily a
 
 You can decide how much or how little data to collect from your affiliates when they sign up. You can mark each field as optional or required.
 
+= Customize Messages for Affiliates = 
+
+You can customize the email messages that gets sent to your affiliate when they register for an account. The following messages are customizable:
+
+* HTML message displayed to user at logon if affiliate STATUS = APPROVED 
+* HTML message displayed to user at logon if affiliate STATUS = DECLINED
+* HTML message displayed to user at logon if affiliate STATUS = PENDING
+* HTML message displayed to user after successfully submitting the affiliate registration form
+* Body of the e-mail sent to the affiliate immediately after submitting their application.
+* Body of the e-mail sent to a newly registered affiliate immediately following their application being approved.
+* Body of e-mail sent to the affiliate immediately following their application being declined.
+
 = Translation Ready = 
 
 This plugin can be translated to your language.
@@ -84,6 +96,9 @@ View screenshots in the following page:
 http://wpaffiliatemanager.com/screen-shots/
 
 == Changelog ==
+
+= 1.7.2 =
+- Body of e-mail sent to a newly registered affiliate (once their application is approved) can now be customized in the "Messaging" settings.
 
 = 1.7.1 =
 - Made enhancements to the "add affiliate" button in the admin area.
