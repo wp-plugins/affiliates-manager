@@ -33,7 +33,7 @@ class WPAM_Util_EmailHandler {
             $username = $user->user_login;
             $address = $user->user_email;
             $blogname = wp_specialchars_decode( get_option( 'blogname' ), ENT_QUOTES );
-            $login_url = wp_login_url();
+            $login_url = get_option(WPAM_PluginConfig::$AffLoginPageURL); //wp_login_url();
             $subject = "Affiliate Application for ".$blogname;
             //$message = "New affiliate registration for {blogname}: has been approved!. \n\nUsername: {affusername} \nPassword: {affpassword} \nLogin URL: {affloginurl}";
             $message = WPAM_MessageHelper::GetMessage('affiliate_application_approved_email');

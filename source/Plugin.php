@@ -18,6 +18,7 @@ require_once WPAM_BASE_DIRECTORY . "/source/Pages/TemplateResponse.php";
 require_once WPAM_BASE_DIRECTORY . "/source/Pages/PublicPage.php";
 require_once WPAM_BASE_DIRECTORY . "/source/Pages/AffiliatesHome.php";
 require_once WPAM_BASE_DIRECTORY . "/source/Pages/AffiliatesRegister.php";
+require_once WPAM_BASE_DIRECTORY . "/source/Pages/AffiliatesLogin.php";
 require_once WPAM_BASE_DIRECTORY . "/source/OutputCleaner.php";
 require_once WPAM_BASE_DIRECTORY . "/source/Validation/Validator.php";
 require_once WPAM_BASE_DIRECTORY . "/source/Validation/StringValidator.php";
@@ -47,6 +48,7 @@ class WPAM_Plugin
 	//these are only used as an index and for initial slug naming, users can change it
 	const PAGE_NAME_HOME = 'affiliate-home';
 	const PAGE_NAME_REGISTER = 'affiliate-register';
+        const PAGE_NAME_LOGIN = 'affiliate-login';
 
 	const EXT_JQUERY_UI_VER = '1.8.13';
 
@@ -54,6 +56,7 @@ class WPAM_Plugin
 	private $publicPages = array();
 	private $affiliateHomePage = null;
 	private $affiliateRegisterPage = null;
+        private $affiliateLoginPage = null;
 	private static $PUBLIC_PAGE_IDS = NULL;
 	private static $ICON_URL = NULL;
 	private $locale;
@@ -61,7 +64,7 @@ class WPAM_Plugin
 
 	public function __construct() {
 		self::$ICON_URL = WPAM_URL . '/images/icon_cash.png';
-		
+		                
 		$this->adminPages = array(
 		 	new WPAM_Pages_Admin_MyAffiliatesPage(
 				'wpam-affiliates',
@@ -105,9 +108,12 @@ class WPAM_Plugin
 
 		$this->affiliateHomePage = new WPAM_Pages_AffiliatesHome(self::PAGE_NAME_HOME, __( 'Store Affiliates', 'wpam' ) );
 		$this->affiliateRegisterPage = new WPAM_Pages_AffiliatesRegister(self::PAGE_NAME_REGISTER, __( 'Register', 'wpam' ), $this->affiliateHomePage);
-
-		$this->publicPages = array( self::PAGE_NAME_HOME => $this->affiliateHomePage,
-									self::PAGE_NAME_REGISTER => $this->affiliateRegisterPage );
+                $this->affiliateLoginPage = new WPAM_Pages_AffiliatesLogin(self::PAGE_NAME_LOGIN, __( 'Affiliate Login', 'wpam' ), $this->affiliateHomePage);
+		$this->publicPages = array( 
+                self::PAGE_NAME_HOME => $this->affiliateHomePage,
+		self::PAGE_NAME_REGISTER => $this->affiliateRegisterPage,
+                self::PAGE_NAME_LOGIN => $this->affiliateLoginPage
+                );
 
 		//set up base actions
 		add_action( 'init', array( $this, 'onInit' ) );
@@ -381,6 +387,7 @@ class WPAM_Plugin
 	{
 		//let the hackery begin! #63
 		global $menu;
+                $menu_parent_slug = 'wpam-affiliates';
 
 		//show this to affiliates, but not admins / affiliate managers
 		if ( ! current_user_can( WPAM_PluginConfig::$AdminCap ) && current_user_can( WPAM_PluginConfig::$AffiliateCap ) ) {
@@ -412,6 +419,7 @@ class WPAM_Plugin
 			);
 		}
 
+                //WP Admin Side Menu
 		foreach ($this->adminPages as $page)
 		{
 			add_object_page(
@@ -435,6 +443,9 @@ class WPAM_Plugin
 			}
 
 		}
+                
+                do_action('wpam_after_main_admin_menu', $menu_parent_slug);
+                
 	}
 
 	public function redirectAffiliate( $redirect_to, $requested_redirect_to, $user ) {

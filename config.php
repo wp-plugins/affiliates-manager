@@ -24,7 +24,7 @@ class WPAM_PluginConfig
 	public static $PayoutMethodPaypalIsEnabledOption = 'wpam_payout_paypal_enabled';
 	public static $HomePageId = 'wpam_home_page_id';
 	public static $RegPageId = 'wpam_register_page_id';
-
+        public static $AffLoginPageURL = 'wpam_aff_login_page';
 	// paypal
 	public static $PaypalMassPayEnabledOption = 'wpam_paypal_mass_pay_enabled';
 	public static $PaypalAPIUserOption = 'wpam_paypal_api_user';
@@ -38,6 +38,7 @@ class WPAM_PluginConfig
 	/***** short codes *****/
 	public static $ShortCodeHome = '[AffiliatesHome]';
 	public static $ShortCodeRegister = '[AffiliatesRegister]';
+        public static $ShortCodeLogin = '[AffiliatesLogin]';
 	
 }
 

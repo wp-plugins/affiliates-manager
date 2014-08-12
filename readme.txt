@@ -1,10 +1,10 @@
 === Affiliates Manager ===
 Contributors: wp.insider, wpaffiliatemgr
 Donate link: http://wpaffiliatemanager.com/
-Tags: affiliate, affiliate marketing, affiliate plugin, affiliates, referral, affiliate program, ads, advertising, affiliate tool, digital downloads, e-commerce, tracking, leads, affiliate software, woocommerce
+Tags: affiliate, affiliates manager, affiliate marketing, affiliate plugin, affiliates, referral, affiliate program, ads, advertising, affiliate tool, digital downloads, e-commerce, tracking, leads, affiliate software, woocommerce
 Requires at least: 3.5
 Tested up to: 3.9.1
-Stable tag: 1.7.2
+Stable tag: 1.7.4
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -71,7 +71,21 @@ You can customize the email messages that gets sent to your affiliate when they 
 
 = Translation Ready = 
 
-This plugin can be translated to your language.
+This plugin can be translated to your language. The following language translations are already available in the plugin:
+
+* English
+* German
+* French
+* Hebrew
+* Portuguese
+* Spanish
+* Bulgarian
+* Finnish
+* Dutch
+* Italian
+* Icelandic
+
+You can translate the plugin using [this documentation](http://wpaffiliatemanager.com/affiliate-manager-plugin-translation/).
 
 = Support =
 
@@ -96,6 +110,14 @@ View screenshots in the following page:
 http://wpaffiliatemanager.com/screen-shots/
 
 == Changelog ==
+
+= 1.7.4 =
+- Added Icelandic language translation to the plugin. The translation was submitted by Bjarni K. Thors.
+- Affiliate login page is now automatically created for you when you install the plugin.
+
+
+= 1.7.3 =
+- Added a new action hook to accommodate the mailchimp signup of your affiliates.
 
 = 1.7.2 =
 - Body of e-mail sent to a newly registered affiliate (once their application is approved) can now be customized in the "Messaging" settings.

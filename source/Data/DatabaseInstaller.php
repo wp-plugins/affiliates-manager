@@ -262,7 +262,8 @@ class WPAM_Data_DatabaseInstaller {
 
         $home_page_id = NULL;
         $reg_page_id = NULL;
-
+        $login_page = NULL;
+        
         foreach ($pages as $page) {
             //Lets check if the required pages are already in place
             if (strpos($page->post_content, WPAM_PluginConfig::$ShortCodeHome) !== false) {
@@ -271,6 +272,10 @@ class WPAM_Data_DatabaseInstaller {
 
             if (strpos($page->post_content, WPAM_PluginConfig::$ShortCodeRegister) !== false) {
                 $reg_page_id = $page->ID;
+            }
+            
+            if (strpos($page->post_content, WPAM_PluginConfig::$ShortCodeLogin) !== false) {
+                $login_page = get_permalink($page->ID);
             }
         }
 
@@ -285,6 +290,13 @@ class WPAM_Data_DatabaseInstaller {
             $reg_page_id = $new_pages[WPAM_Plugin::PAGE_NAME_REGISTER]->install();
         }
         update_option(WPAM_PluginConfig::$RegPageId, $reg_page_id); //Save the ID of the registration page.
+        
+        if (!$login_page) {
+            //Could not find a page with the affiliate login shortcode. Lets create this page
+            $login_page_id = $new_pages[WPAM_Plugin::PAGE_NAME_LOGIN]->install();
+            $login_page = get_permalink($login_page_id);          
+        }
+        update_option(WPAM_PluginConfig::$AffLoginPageURL, $login_page); //Save the URL of the login page
         //Add code for any new page needed for this plugin.
     }
 

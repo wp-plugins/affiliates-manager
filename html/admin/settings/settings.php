@@ -46,7 +46,8 @@ require_once WPAM_BASE_DIRECTORY . "/html/widget_form_errors_panel.php";
                     'wpam-settings' => 'General',
                     'wpam-settings&action=affiliate-registration' => 'Affiliate Registration',
                     'wpam-settings&action=messaging' => 'Messaging',
-                    'wpam-settings&action=payment' => 'Payment'
+                    'wpam-settings&action=payment' => 'Payment',
+                    'wpam-settings&action=affiliate-pages' => 'Pages/Forms',
                 ); 
 
                 if(isset($_GET['page'])){
@@ -93,6 +94,12 @@ require_once WPAM_BASE_DIRECTORY . "/html/widget_form_errors_panel.php";
                               <input type="hidden" name="AffPaymentSettings" value="1" />
                               <?php
                               require_once "settings_payment.php";
+                              break;
+                          case 'affiliate-pages':
+                              ?>
+                              <input type="hidden" name="AffPagesSettings" value="1" />
+                              <?php
+                              require_once "settings_aff_pages.php";
                               break;
                      }
                 }

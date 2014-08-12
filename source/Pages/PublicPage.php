@@ -37,12 +37,16 @@ abstract class WPAM_Pages_PublicPage
 
 	public function install()
 	{
-		$postHelper = new WPAM_PostHelper();
-		if ( $this->parentPage !== NULL ) {
-			return $postHelper->createPage($this->name, $this->title, '[AffiliatesRegister]', $this->parentPage->getPageId() );
-		} else {
-			return $postHelper->createPage($this->name, $this->title, '[AffiliatesHome]');
-		}
+            $postHelper = new WPAM_PostHelper();
+            if($this->parentPage == NULL) {
+                return $postHelper->createPage($this->name, $this->title, '[AffiliatesHome]');
+            }
+            if($this->name == "affiliate-register") {
+                return $postHelper->createPage($this->name, $this->title, '[AffiliatesRegister]', $this->parentPage->getPageId() );
+            }
+            if($this->name == "affiliate-login"){
+                return $postHelper->createPage($this->name, $this->title, '[AffiliatesLogin]', $this->parentPage->getPageId() );
+            }
 	}
 
 	/*
