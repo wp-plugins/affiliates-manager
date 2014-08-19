@@ -168,7 +168,9 @@ class WPAM_Plugin
 
 	public function onInit() {
             
-                add_action('wp_enqueue_scripts', array($this,'load_shortcode_specific_scripts'));
+                add_action( 'wp_enqueue_scripts', array($this,'load_shortcode_specific_scripts'));
+                
+                add_action( 'wp_head' , array($this,'handle_wp_head_hook'));
                 
 		//actions & filters
 		add_action( 'template_redirect',array($this, 'onTemplateRedirect' ) );
@@ -229,6 +231,12 @@ class WPAM_Plugin
             if( is_a( $post, 'WP_Post' ) && has_shortcode( $post->post_content, 'AffiliatesLogin') ) {
                 wp_enqueue_style('wpamloginstyle', WPAM_URL . '/style/wpam-login-styles.css');
             }
+        }
+        
+        public function handle_wp_head_hook()
+        {
+            $debug_marker = "<!-- Affiliates Manager plugin v" . WPAM_VERSION . " - https://wpaffiliatemanager.com/ -->";
+            echo "\n${debug_marker}\n";
         }
         
         public function doLoginShortcode()

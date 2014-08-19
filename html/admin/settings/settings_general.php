@@ -171,6 +171,15 @@ These addresses will only affect emails going to affiliates regarding their appr
                 </td>
         </tr>
         
+        <tr>
+                <th>
+                        <label id="lblaffCurCode" for="affCurrencyCode"><?php _e( 'Currency Code', 'wpam' ) ?></label>
+                </th>
+                <td>
+                        <input type="text" id="affCurrencyCode" name="affCurrencyCode" size="5" value="<?php echo $this->viewData['request']['affCurrencyCode']?>" />
+                </td>
+        </tr>
+        
         <tr valign="top">
         <th scope="row"><label for="enable_debug"><?php echo __('Enable Debug','wpam'); ?></label></th>
         <td>

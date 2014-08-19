@@ -12,11 +12,10 @@ class WPAM_MoneyHelper {
 	}
 
 	public static function getCurrencyCode() {
-		$info = localeconv();
-		if( ! empty( $info['int_curr_symbol'] ) ) {
-			return trim( $info['int_curr_symbol'] );
-		} else {
-			return 'USD';
-		}
+            $currency_code = get_option(WPAM_PluginConfig::$AffCurrencyCode);
+            if(empty($currency_code)){
+               $currency_code = 'USD';
+            }
+            return $currency_code;
 	}
 }

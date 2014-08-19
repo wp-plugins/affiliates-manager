@@ -1,10 +1,10 @@
 === Affiliates Manager ===
 Contributors: wp.insider, wpaffiliatemgr
-Donate link: http://wpaffiliatemanager.com/
+Donate link: https://wpaffiliatemanager.com/
 Tags: affiliate, affiliates manager, affiliate marketing, affiliate plugin, affiliates, referral, affiliate program, ads, advertising, affiliate tool, digital downloads, e-commerce, tracking, leads, affiliate software, woocommerce
 Requires at least: 3.5
-Tested up to: 3.9.1
-Stable tag: 1.7.4
+Tested up to: 3.9.2
+Stable tag: 1.7.5
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -57,6 +57,11 @@ You can add as many banners or text link ads as you wish. Plus, you can easily a
 
 You can decide how much or how little data to collect from your affiliates when they sign up. You can mark each field as optional or required.
 
+= Autoresponder Integration =
+
+* Sign up affiliates to your Mailchimp list.
+* Sign up affiliates to MailPoet newsletter list.
+
 = Customize Messages for Affiliates = 
 
 You can customize the email messages that gets sent to your affiliate when they register for an account. The following messages are customizable:
@@ -85,15 +90,15 @@ This plugin can be translated to your language. The following language translati
 * Italian
 * Icelandic
 
-You can translate the plugin using [this documentation](http://wpaffiliatemanager.com/affiliate-manager-plugin-translation/).
+You can translate the plugin using [this documentation](https://wpaffiliatemanager.com/affiliate-manager-plugin-translation/).
 
 = Support =
 
-View the [Plugin Documentation](http://wpaffiliatemanager.com/documentation/) to get started.
+View the [Plugin Documentation](https://wpaffiliatemanager.com/documentation/) to get started.
 
 If you have a question, you can ask it on our support forum.
 
-Visit the [affiliate manager plugin](http://wpaffiliatemanager.com) site for more details.
+Visit the [affiliate manager plugin](https://wpaffiliatemanager.com) site for more details.
 
 == Installation ==
 
@@ -107,14 +112,18 @@ None
 
 == Screenshots ==
 View screenshots in the following page:
-http://wpaffiliatemanager.com/screen-shots/
+https://wpaffiliatemanager.com/screen-shots/
 
 == Changelog ==
+
+= 1.7.5 =
+- Added a new option to the settings to specify "currency code".
+- Created a new addon to integrate the MailPoet newsletter with affiilates manager plugin. See details here:
+https://wpaffiliatemanager.com/sign-affiliates-to-mailpoet-list/
 
 = 1.7.4 =
 - Added Icelandic language translation to the plugin. The translation was submitted by Bjarni K. Thors.
 - Affiliate login page is now automatically created for you when you install the plugin.
-
 
 = 1.7.3 =
 - Added a new action hook to accommodate the mailchimp signup of your affiliates.
