@@ -249,9 +249,39 @@ class WPAM_Data_DatabaseInstaller {
             $msg->use = 'Body of e-mail sent to a newly registered affiliate immediately following their application being approved.';
             $msgRepo->insert($msg);
         }
-        //Adde other options below
+        //Add other options below
         
         
+        //add a new creative (default)
+        $default_creative_id = get_option(WPAM_PluginConfig::$DefaultCreativeId);
+        $db = new WPAM_Data_DataAccess();
+        $creativesRepo = $db->getCreativesRepository();
+        $create_new_creative = false;
+        if(empty($default_creative_id))  //no creative ID saved in the config
+        {
+            $create_new_creative = true;
+        }
+        else
+        {
+            if(!$creativesRepo->existsBy(array('creativeId' => $default_creative_id, 'status' => 'active')))  //no active creative with this ID in the creative database (probably the user deleted it)
+            {
+                $create_new_creative = true;
+            }
+        }
+        
+        if($create_new_creative)
+        {
+            $model = new WPAM_Data_Models_CreativeModel();
+            $model->dateCreated = time();
+            $model->status = 'active';
+            $model->type === 'text';
+            $model->linkText = 'default affiliate link';
+            $model->altText = '';
+            $model->slug = site_url('/');
+            $model->name = 'default creative';
+            $id = $creativesRepo->insert($model);
+            update_option(WPAM_PluginConfig::$DefaultCreativeId, $id); //Save the ID of the deafult creative
+        }
     }
 
     public function doInstallPages(array $new_pages) {

@@ -248,12 +248,13 @@ class WPAM_Plugin
             if(is_user_logged_in()) {
                 global $current_user;
                 get_currentuserinfo();
-                
+                $logout_url = wp_logout_url($home_page_url);
                 $output = '<div class="wpam-logged-in">';
                 $output .= '<p>'.__('You are currently logged in','wpam').'</p>';
                 $output .= '<div class="wpam-logged-in-gravatar"><img src="http://www.gravatar.com/avatar/' . md5( trim( strtolower( $current_user->user_email ) ) ) . '?s=64" /></div>';
                 $output .= '<div class="wpam-logged-in-username">'.__('Username','wpam').': ' . $current_user->user_login . "</div>";
                 $output .= '<div class="wpam-logged-in-email">'.__('Email','wpam').': ' . $current_user->user_email . "</div>";
+                $output .= '<div class="wpam-logged-in-logout-link"><a href="'.$logout_url.'">'.__('Log out','wpam').'</a></div>';
                 $output .= '</div>'; 
                 return $output;
             }

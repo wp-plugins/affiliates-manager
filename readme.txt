@@ -1,10 +1,10 @@
 === Affiliates Manager ===
-Contributors: wp.insider, wpaffiliatemgr
+Contributors: wp.insider, affmngr
 Donate link: https://wpaffiliatemanager.com/
-Tags: affiliate, affiliates manager, affiliate marketing, affiliate plugin, affiliates, referral, affiliate program, ads, advertising, affiliate tool, digital downloads, e-commerce, tracking, leads, affiliate software, woocommerce
+Tags: affiliate, affiliates manager, affiliate marketing, affiliate plugin, affiliates, referral, affiliate program, ads, advertising, affiliate tool, digital downloads, e-commerce, tracking, leads, affiliate software, woocommerce, affiliate campaign, paypal
 Requires at least: 3.5
 Tested up to: 4.0
-Stable tag: 1.7.5
+Stable tag: 1.7.6
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -29,6 +29,8 @@ Affiliates Manager integrates with some popular e-commerce solutions. It integra
 * Easy Digital Downloads
 * iThemes Exchange
 * WP eStore
+* Sell Digital Downloads
+* Paid Membership Pro
 
 = Real-Time Reporting =
 
@@ -116,10 +118,19 @@ https://wpaffiliatemanager.com/screen-shots/
 
 == Changelog ==
 
+= 1.7.6 =
+- Created a new addon to integrate paid membership pro with affilates manager plugin. See details below:
+  https://wpaffiliatemanager.com/affiliates-manager-paid-memberships-pro-integration/
+- Created a new addon to integrate sell digital downloads with affilates manager plugin. See details below:
+  https://wpaffiliatemanager.com/affiliates-manager-sell-digital-downloads-integration/
+- The plugin will now add a default creative during installation.
+- Added a "Log out" link in the affiliate login page of the plugin.
+- Added British English translation to the plugin. The translation file was submitted by John.
+
 = 1.7.5 =
 - Added a new option to the settings to specify "currency code".
-- Created a new addon to integrate the MailPoet newsletter with affiilates manager plugin. See details here:
-https://wpaffiliatemanager.com/sign-affiliates-to-mailpoet-list/
+- Created a new addon to integrate the MailPoet newsletter with affilates manager plugin. See details here:
+  https://wpaffiliatemanager.com/sign-affiliates-to-mailpoet-list/
 
 = 1.7.4 =
 - Added Icelandic language translation to the plugin. The translation was submitted by Bjarni K. Thors.

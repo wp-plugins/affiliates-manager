@@ -35,6 +35,7 @@ class WPAM_PluginConfig
 
 	/***** MISC *****/
 	public static $RefKey = 'wpam_refkey';
+        public static $DefaultCreativeId = 'wpam_default_creative_id';
 
 	/***** short codes *****/
 	public static $ShortCodeHome = '[AffiliatesHome]';
