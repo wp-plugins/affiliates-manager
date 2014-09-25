@@ -26,6 +26,7 @@ class WPAM_Data_DatabaseInstaller {
         $tt_purchase_logs_table = $this->db->prefix . WPAM_Data_DataAccess::TABLE_TRACKING_TOKENS_PURCHASE_LOGS;
         $affiliates_fields_table = $this->db->prefix . WPAM_Data_DataAccess::TABLE_AFFILIATES_FIELDS;
         $paypal_logs_table = $this->db->prefix . WPAM_Data_DataAccess::TABLE_PAYPAL_LOGS;
+        $impressions_table = $this->db->prefix . WPAM_Data_DataAccess::TABLE_IMPRESSIONS;
 
         $aff_tbl_sql = "CREATE TABLE " . $affiliates_table . " (
         `affiliateId` int(11) NOT NULL AUTO_INCREMENT,
@@ -164,6 +165,17 @@ class WPAM_Data_DatabaseInstaller {
         )ENGINE=MyISAM DEFAULT CHARSET=utf8;";
         dbDelta($tt_purchase_logs_tbl_sql);
 
+        $impressions_tbl_sql = "CREATE TABLE " . $impressions_table . " (
+        `impressionId` int(11) NOT NULL AUTO_INCREMENT,
+        `dateCreated` datetime NOT NULL,
+        `sourceAffiliateId` int(11) NOT NULL,
+        `sourceCreativeId` int(11) DEFAULT NULL,
+        `referer` text,
+        `affiliateSubCode` varchar(30) DEFAULT NULL,
+        PRIMARY KEY (`impressionId`)
+        )ENGINE=MyISAM DEFAULT CHARSET=utf8;";
+        dbDelta($impressions_tbl_sql);
+
         update_option(self::WPAM_DB_VERSION_NAME, WPAM_DB_VERSION);
     }
 
@@ -263,7 +275,13 @@ class WPAM_Data_DatabaseInstaller {
         }
         else
         {
-            if(!$creativesRepo->existsBy(array('creativeId' => $default_creative_id, 'status' => 'active')))  //no active creative with this ID in the creative database (probably the user deleted it)
+            if($creativesRepo->existsBy(array('creativeId' => $default_creative_id, 'status' => 'active')))
+            {
+                $creative = $creativesRepo->load($default_creative_id);
+                $creative->slug = '';  //update slug of existing default creative to avoid any mistake.
+                $creativesRepo->update($creative);
+            }
+            else   //no active creative with this ID in the creative database (probably the user deleted it)
             {
                 $create_new_creative = true;
             }
@@ -277,7 +295,7 @@ class WPAM_Data_DatabaseInstaller {
             $model->type === 'text';
             $model->linkText = 'default affiliate link';
             $model->altText = '';
-            $model->slug = site_url('/');
+            $model->slug = '';
             $model->name = 'default creative';
             $id = $creativesRepo->insert($model);
             update_option(WPAM_PluginConfig::$DefaultCreativeId, $id); //Save the ID of the deafult creative
