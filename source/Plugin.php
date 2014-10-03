@@ -231,6 +231,12 @@ class WPAM_Plugin
             if( is_a( $post, 'WP_Post' ) && has_shortcode( $post->post_content, 'AffiliatesLogin') ) {
                 wp_enqueue_style('wpamloginstyle', WPAM_URL . '/style/wpam-login-styles.css');
             }
+            if( is_a( $post, 'WP_Post' ) && has_shortcode( $post->post_content, 'AffiliatesHome') ) {
+                wp_enqueue_style('wpampurestyle', WPAM_URL . '/style/pure-styles.css');
+            }
+            if( is_a( $post, 'WP_Post' ) && has_shortcode( $post->post_content, 'AffiliatesRegister') ) {
+                wp_enqueue_style('wpampurestyle', WPAM_URL . '/style/pure-styles.css');
+            }
         }
         
         public function handle_wp_head_hook()
@@ -351,7 +357,11 @@ class WPAM_Plugin
 
 	public function onWooCheckout( $order_id, $posted ) {
 		$order = new WC_Order( $order_id );
-		$purchaseAmount = $order->get_total() - $order->get_shipping();
+                $total = $order->order_total;
+                $shipping = $order->get_total_shipping();
+                $tax = $order->get_total_tax();
+                WPAM_Logger::log_debug('WooCommerce Integration - Total amount: ' . $total . '. Total shipping: ' . $shipping . 'Total tax: ' . $tax);
+		$purchaseAmount = $total - $shipping - $tax;;
 		$requestTracker = new WPAM_Tracking_RequestTracker();
 		$requestTracker->handleCheckout( $order_id, $purchaseAmount );
 	}
