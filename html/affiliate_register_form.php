@@ -19,8 +19,24 @@ $request = @$this->viewData['request'];
 					<th><label for="_<?php echo $field->databaseField?>"><?php echo $field->name?><?php echo $field->required ? '&nbsp;*': '' ?></label></th>
 					<td>
 						<?php switch ($field->fieldType) {
+                                                        case 'email':
+                                                            $email = $request['_'.$field->databaseField];
+                                                            if(is_user_logged_in()){
+                                                                $current_user = wp_get_current_user();
+                                                                $email = $current_user->user_email;
+                                                                ?>
+                                                                <input type="text" size="20" id="_<?php echo $field->databaseField?>" name="_<?php echo $field->databaseField?>" value="<?php echo $email?>" readonly />
+                                                                <p class="wpam_registration_input_help_text"><?php _e('This is the email address associated with your currently logged in WordPress user account.', 'wpam')?></p>
+                                                                <p class="wpam_registration_input_help_text"><?php _e('If you want to use a different email address, log out of your WordPress account then try a new registration.', 'wpam')?></p>
+                                                                <?php
+                                                            }
+                                                            else{
+                                                            ?>
+                                                            <input type="text" size="20" id="_<?php echo $field->databaseField?>" name="_<?php echo $field->databaseField?>" value="<?php echo $email?>" />
+                                                            <?php
+                                                            }
+                                                             break;
 							case 'string':
-							case 'email':
 							case 'number':
 							case 'zipCode':
 								?>
@@ -55,9 +71,13 @@ $request = @$this->viewData['request'];
 					<span id="termsAgreeWarning" style="color: red; display: none"><br><?php _e( 'You must agree to the terms.', 'wpam' ) ?></span>
 				</td>
 			</tr>
-
 		</table>
-
+                <?php 
+                $output = apply_filters( 'wpam_before_registration_submit_button', '');
+                if(!empty($output)){
+                    echo $output;
+                }
+                ?>
                 <div class="wpam-registration-form">
                     <input type="submit" name="submit" value="<?php _e( 'Submit Application', 'wpam' ) ?>" class="pure-button pure-button-active" />
                 </div>
