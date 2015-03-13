@@ -41,6 +41,7 @@ require_once WPAM_BASE_DIRECTORY . "/source/PayPal/Service.php";
 require_once WPAM_BASE_DIRECTORY . "/source/Util/JsonHandler.php";
 require_once WPAM_BASE_DIRECTORY . "/source/display_functions.php";
 require_once WPAM_BASE_DIRECTORY . "/source/Util/DebugLogger.php";
+require_once WPAM_BASE_DIRECTORY . "/utility-functions.php";
 
 
 class WPAM_Plugin
@@ -407,22 +408,17 @@ class WPAM_Plugin
         public function WooCommerceProcessTransaction($order_id)
         {          
             //affiliates manager code
-            WPAM_Logger::log_debug('WooCommerce Integration - Order processed. Checking if affiliate commission needs to be awarded.');
+            WPAM_Logger::log_debug('WooCommerce Integration - Order processed. Order ID: '.$order_id);
+            if(wpam_has_purchase_record($order_id)){
+                WPAM_Logger::log_debug('WooCommerce Integration - Affiliate commission for this transaction was awarded once. No need to process anything.');
+                return;
+            }
+            WPAM_Logger::log_debug('WooCommerce Integration - Checking if affiliate commission needs to be awarded.');
             $order = new WC_Order( $order_id );
             $recurring_payment_method = get_post_meta($order_id, '_recurring_payment_method', true);
             if (!empty($recurring_payment_method)) {
                 WPAM_Logger::log_debug("WooCommerce Integration - This is a recurring payment order. Subscription payment method: ".$recurring_payment_method);
                 WPAM_Logger::log_debug("The commission will be calculated via the recurring payemnt api call.");
-                return;
-            }
-            $total = $order->order_total;
-            $shipping = $order->get_total_shipping();
-            $tax = $order->get_total_tax();
-            WPAM_Logger::log_debug('WooCommerce Integration - Total amount: ' . $total . ', Total shipping: ' . $shipping . ', Total tax: ' . $tax);
-            $purchaseAmount = $total - $shipping - $tax;
-            $wpam_refkey = get_post_meta($order_id, '_wpam_refkey', true);
-            if(empty($wpam_refkey)){
-                WPAM_Logger::log_debug("WooCommerce Integration - could not get wpam_refkey from cookie. This is not an affiliate sale");
                 return;
             }
 
@@ -433,6 +429,19 @@ class WPAM_Plugin
                 WPAM_Logger::log_debug("WooCommerce Integration - Commission for this transaciton will be awarded when you set the order status to completed or processing.");
                 return;
             }
+            
+            $total = $order->order_total;
+            $shipping = $order->get_total_shipping();
+            $tax = $order->get_total_tax();
+            WPAM_Logger::log_debug('WooCommerce Integration - Total amount: ' . $total . ', Total shipping: ' . $shipping . ', Total tax: ' . $tax);
+            $purchaseAmount = $total - $shipping - $tax;
+            $wpam_refkey = get_post_meta($order_id, '_wpam_refkey', true);
+            $wpam_refkey = apply_filters( 'wpam_woo_override_refkey', $wpam_refkey, $order);
+            if(empty($wpam_refkey)){
+                WPAM_Logger::log_debug("WooCommerce Integration - could not get wpam_refkey from cookie. This is not an affiliate sale");
+                return;
+            }
+            
             $requestTracker = new WPAM_Tracking_RequestTracker();
             WPAM_Logger::log_debug('WooCommerce Integration - awarding commission for order ID: '.$order_id.'. Purchase amount: '.$purchaseAmount);
             $requestTracker->handleCheckoutWithRefKey( $order_id, $purchaseAmount, $wpam_refkey);
