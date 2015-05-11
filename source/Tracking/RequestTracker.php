@@ -13,7 +13,7 @@ require_once WPAM_BASE_DIRECTORY . "/source/Data/Models/ImpressionModel.php";
 class WPAM_Tracking_RequestTracker {
 
 	public function handleCheckout( $purchaseLogId, $purchaseAmount ) {
-		
+		//TODO start - we only need this to block of code to keep backwards compatibility. later when we will directly get affiliate ID from cookie it can be deleted
 		$db = new WPAM_Data_DataAccess();
 		$binConverter = new WPAM_Util_BinConverter();
 		$affiliate = NULL;
@@ -51,45 +51,15 @@ class WPAM_Tracking_RequestTracker {
 				}
 			}
 		}
-
-		$affiliate = $db->getAffiliateRepository()->loadByPurchaseLogId( $purchaseLogId );
-
-		if ( $affiliate !== NULL && $affiliate->isActive() ) {
-			
-			if ( $strRefKey )
-				$db->getEventRepository()->quickInsert( time(), $binConverter->stringToBin( $strRefKey ), 'purchase' );
-
-			$creditAmount = $this->calculateCreditAmount( $affiliate, $purchaseAmount );
-			$creditAmount = apply_filters( 'wpam_credit_amount', $creditAmount, $purchaseAmount, $purchaseLogId );
-			$currency = WPAM_MoneyHelper::getCurrencyCode();
-			$description = "Credit for sale of $purchaseAmount $currency (PURCHASE LOG ID = $purchaseLogId)";
-			$existingCredit = $db->getTransactionRepository()->loadBy( array(
-					'referenceId' => $purchaseLogId
-				)
-			);
-
-			if ( $existingCredit === NULL ) {
-				$credit = new WPAM_Data_Models_TransactionModel();
-				$credit->dateCreated = time();
-				$credit->referenceId = $purchaseLogId;
-				$credit->affiliateId = $affiliate->affiliateId;
-				$credit->type = 'credit';
-				$credit->description = $description;
-				$credit->amount = $creditAmount;
-
-				$db->getTransactionRepository()->insert( $credit );
-
-			} else {
-				$existingCredit->dateModified = time();
-				$existingCredit->description = $description;
-				$existingCredit->amount = $creditAmount;
-				$db->getTransactionRepository()->update( $existingCredit );
-			}
-		}
+                //TODO end
+                $args = array();
+                $args['txn_id'] = $purchaseLogId;
+                $args['amount'] = $purchaseAmount;
+                WPAM_Commission_Tracking::award_commission($args);		
 	}
 	
 	public function handleCheckoutWithRefKey( $purchaseLogId, $purchaseAmount, $strRefKey) {
-		
+		//TODO start - we only need this to block of code to keep backwards compatibility. later when we will directly get affiliate ID from cookie it can be deleted
 		$db = new WPAM_Data_DataAccess();
 		$binConverter = new WPAM_Util_BinConverter();
 		$affiliate = NULL;
@@ -121,43 +91,11 @@ class WPAM_Tracking_RequestTracker {
 				}
 			}
 		}
-
-		$affiliate = $db->getAffiliateRepository()->loadByPurchaseLogId( $purchaseLogId );
-
-		if ( $affiliate !== NULL && $affiliate->isActive() ) {
-			
-			$creditAmount = $this->calculateCreditAmount( $affiliate, $purchaseAmount );
-			$creditAmount = apply_filters( 'wpam_credit_amount', $creditAmount, $purchaseAmount, $purchaseLogId );
-			$currency = WPAM_MoneyHelper::getCurrencyCode();
-			$description = "Credit for sale of $purchaseAmount $currency (PURCHASE LOG ID = $purchaseLogId)";
-			$existingCredit = $db->getTransactionRepository()->loadBy( array(
-					'referenceId' => $purchaseLogId
-				)
-			);
-
-			if ( $existingCredit === NULL ) {
-				$credit = new WPAM_Data_Models_TransactionModel();
-				$credit->dateCreated = time();
-				$credit->referenceId = $purchaseLogId;
-				$credit->affiliateId = $affiliate->affiliateId;
-				$credit->type = 'credit';
-				$credit->description = $description;
-				$credit->amount = $creditAmount;
-                                if($strRefKey){
-                                    $db->getEventRepository()->quickInsert( time(), $binConverter->stringToBin( $strRefKey ), 'purchase' );
-                                }
-				$db->getTransactionRepository()->insert( $credit );
-
-			} else {
-                            /*
-                            $existingCredit->dateModified = time();
-                            $existingCredit->description = $description;
-                            $existingCredit->amount = $creditAmount;
-                            $db->getTransactionRepository()->update( $existingCredit );
-                            */
-                            WPAM_Logger::log_debug('Commission for this sale has already been awarded. PURCHASE LOG ID: '.$purchaseLogId.', Purchase amount: '.$purchaseAmount);
-			}
-		}
+                //TODO end
+                $args = array();
+                $args['txn_id'] = $purchaseLogId;
+                $args['amount'] = $purchaseAmount;
+                WPAM_Commission_Tracking::award_commission($args);
 	}
         
 	protected function calculateCreditAmount(WPAM_Data_Models_AffiliateModel $affiliate, $amount)
@@ -312,3 +250,4 @@ class WPAM_Tracking_RequestTracker {
 		return strtotime( "+{$days} days" );
 	}
 }
+
