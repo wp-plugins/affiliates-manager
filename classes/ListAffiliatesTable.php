@@ -1,6 +1,6 @@
 <?php
 
-include_once('aff_list_table.php');
+include_once('ListTable.php');
 
 class WPAM_List_Affiliates_Table extends WPAM_List_Table {
 
@@ -58,7 +58,7 @@ class WPAM_List_Affiliates_Table extends WPAM_List_Table {
     function get_columns() {
         $columns = array(
             'cb' => '<input type="checkbox" />', //Render a checkbox instead of text
-            'affiliateId' => __('AID', 'wpam'),
+            'affiliateId' => __('Affiliate ID', 'wpam'),
             'status' => __('Status', 'wpam'),
             'balance' => __('Balance', 'wpam'),
             'earnings' => __('Earnings', 'wpam'),

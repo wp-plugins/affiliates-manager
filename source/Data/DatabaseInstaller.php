@@ -5,8 +5,6 @@
  */
 class WPAM_Data_DatabaseInstaller {
 
-    const WPAM_DB_VERSION_NAME = 'wpam_db_version';
-
     private $db;
 
     public function __construct(wpdb $db) {
@@ -89,8 +87,10 @@ class WPAM_Data_DatabaseInstaller {
         `sourceCreativeId` int(11) DEFAULT NULL,
         `referer` text,
         `affiliateSubCode` varchar(30) DEFAULT NULL,
-        PRIMARY KEY (`trackingTokenId`),
-        UNIQUE KEY `trackingKey` (`trackingKey`)
+        `browser` varchar(256) default '',
+	`ipAddress` varchar(128) default '',
+        `customId` varchar(128) default '',
+        PRIMARY KEY (`trackingTokenId`)
         )" . $charset_collate . ";";
         dbDelta($tracking_tokens_tbl_sql);
 
@@ -187,7 +187,7 @@ class WPAM_Data_DatabaseInstaller {
         )" . $charset_collate . ";";
         dbDelta($impressions_tbl_sql);
 
-        update_option(self::WPAM_DB_VERSION_NAME, WPAM_DB_VERSION);
+        update_option('wpam_db_version', WPAM_DB_VERSION);
     }
 
     public function doFreshInstallDbDefaultData() {

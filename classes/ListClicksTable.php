@@ -1,6 +1,6 @@
 <?php
 
-include_once('aff_list_table.php');
+include_once('ListTable.php');
 
 class WPAM_List_Clicks_Table extends WPAM_List_Table {
 
@@ -61,11 +61,10 @@ class WPAM_List_Clicks_Table extends WPAM_List_Table {
     function get_columns() {
         $columns = array(
             'cb' => '<input type="checkbox" />', //Render a checkbox instead of text
-            'trackingTokenId' => __('Tracking ID', 'wpam'),
+            'trackingTokenId' => __('Row ID', 'wpam'),
             'dateCreated' => __('Date', 'wpam'),
             'sourceAffiliateId' => __('Affiliate ID', 'wpam'),
             'trackingKey' => __('Tracking Key', 'wpam'),
-            'sourceCreativeId' => __('Creative ID', 'wpam'),
             'referer' => __('Referring URL', 'wpam')
         );
         return $columns;
