@@ -66,5 +66,57 @@ class WPAM_Click_Tracking {
         $table = WPAM_TRACKING_TOKENS_TBL;
         $wpdb->insert( $table, $args);
     }
+    
+    /*
+     * Gets total number of clicks for a given affiliate.
+     * $args array requires at least 3 elements 
+     * aff_id - affiliate ID
+     * start_date - start date 
+     * end_date - end date
+     */
+    public static function get_total_clicks($args){  //$args() at least requires 3 elements: affiliate ID, start date and end date
+        global $wpdb;
+        $table = WPAM_TRACKING_TOKENS_TBL;
+        $total_clicks = 0;
+        $result = $wpdb->get_var( $wpdb->prepare( 
+	"
+		SELECT COUNT(*) 
+		FROM $table 
+		WHERE sourceAffiliateId = %d
+                AND dateCreated >= %s
+                AND dateCreated < %s
+                
+	",
+        $args['aff_id'],        
+	$args['start_date'],
+        $args['end_date']        
+        ) );
+        if($result != null){
+            $total_clicks = $result;
+        }
+        return $total_clicks;
+    }
+    /*
+     * Gets all time total number of clicks for a given affiliate.
+     * $args array requires only 1 element
+     * aff_id - affiliate ID
+     */
+    public static function get_all_time_total_clicks($args){  //$args() at least requires affiliate ID
+        global $wpdb;
+        $table = WPAM_TRACKING_TOKENS_TBL;
+        $total_clicks = 0;
+        $result = $wpdb->get_var( $wpdb->prepare( 
+	"
+		SELECT COUNT(*) 
+		FROM $table 
+		WHERE sourceAffiliateId = %d              
+	",
+        $args['aff_id']             
+        ) );
+        if($result != null){
+            $total_clicks = $result;
+        }
+        return $total_clicks;
+    }
 
 }
